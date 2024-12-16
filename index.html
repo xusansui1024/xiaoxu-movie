@@ -23,7 +23,7 @@
             color: #2c4a3c;
             text-align: center;
             margin-bottom: 30px;
-            font-size: 28px;
+            font-size: 32px;
         }
         .input-group {
             margin-bottom: 25px;
@@ -152,7 +152,7 @@
             top: -40px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 24px;
+            font-size: 28px;
             color: #4CAF50;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
             background-color: #ffffff;
@@ -766,10 +766,149 @@
             background-color: #ffffff;
             box-shadow: 0 4px 6px rgba(255, 193, 7, 0.1);
         }
+        
+        /* 暗色主题 */
+        body.theme-dark {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+        }
+        
+        .theme-dark .container {
+            background-color: #2d2d2d;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        
+        .theme-dark .input-group {
+            background-color: #3d3d3d;
+            border-color: #4d4d4d;
+        }
+        
+        .theme-dark #videoUrl {
+            background-color: #2d2d2d;
+            border-color: #4d4d4d;
+            color: #e0e0e0;
+        }
+        
+        .theme-dark .history-container,
+        .theme-dark .favorites-container,
+        .theme-dark .stats-container {
+            background-color: #3d3d3d;
+            border-color: #4d4d4d;
+        }
+        
+        .theme-dark .history-item,
+        .theme-dark .favorite-item,
+        .theme-dark .stat-item {
+            background-color: #2d2d2d;
+            color: #e0e0e0;
+        }
+        
+        .theme-dark .danmu-input {
+            background-color: #2d2d2d;
+            border-color: #4d4d4d;
+            color: #e0e0e0;
+        }
+        
+        .theme-dark .control-button {
+            background-color: #3d3d3d;
+            color: #e0e0e0;
+        }
+        
+        .theme-dark .quality-selector,
+        .theme-dark .speed-selector,
+        .theme-dark .source-selector {
+            background-color: #2d2d2d;
+            border-color: #4d4d4d;
+            color: #e0e0e0;
+        }
+        
+        .theme-dark h1 {
+            color: #4CAF50;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            background-color: #2d2d2d;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 32px;
+            border: 2px solid #4CAF50;
+        }
+        
+        .theme-dark .footer {
+            color: #4CAF50;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            background-color: #2d2d2d;
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: 2px solid #4CAF50;
+            margin-top: 30px;
+            font-size: 28px;
+        }
+        
+        /* 添加边框装饰 */
+        .container::before,
+        .container::after {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            pointer-events: none;
+        }
+        
+        /* 左上角和右上角装饰 */
+        .corner-decoration {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            font-size: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.2;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .corner-top-left {
+            top: -20px;
+            left: -20px;
+            transform: rotate(-45deg);
+        }
+        
+        .corner-top-right {
+            top: -20px;
+            right: -20px;
+            transform: rotate(45deg);
+        }
+        
+        .corner-bottom-left {
+            bottom: -20px;
+            left: -20px;
+            transform: rotate(-135deg);
+        }
+        
+        .corner-bottom-right {
+            bottom: -20px;
+            right: -20px;
+            transform: rotate(135deg);
+        }
+        
+        /* 边框装饰动画 */
+        @keyframes borderFloat {
+            0%, 100% { transform: translateY(0) rotate(0); }
+            50% { transform: translateY(-5px) rotate(5deg); }
+        }
+        
+        /* 暗色主题适配 */
+        .theme-dark .corner-decoration {
+            opacity: 0.3;
+            color: #4CAF50;
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="corner-decoration corner-top-left">🎬</div>
+        <div class="corner-decoration corner-top-right">📺</div>
+        <div class="corner-decoration corner-bottom-left">🎮</div>
+        <div class="corner-decoration corner-bottom-right">🎨</div>
         <div class="crayon-decoration shinchan-left"></div>
         <div class="crayon-decoration shinchan-right"></div>
         <div class="crayon-border"></div>
@@ -781,7 +920,7 @@
                 <button id="parseButton">解析播放</button>
                 <button id="addToFavorites" class="favorite-button">收藏</button>
                 <select id="qualitySelector" class="quality-selector">
-                    <!-- 选项将由 JavaScript 动态添加 -->
+                    <!-- 选项将�� JavaScript 动态添加 -->
                 </select>
                 <select id="speedSelector" class="speed-selector">
                     <!-- 选项将由 JavaScript 动态添加 -->
