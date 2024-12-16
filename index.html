@@ -222,7 +222,7 @@
             position: relative;
             overflow: hidden;
             border-radius: 12px;
-            background: linear-gradient(135deg, #81c784 0%, #4caf50 100%);
+            background-color: #e8f5e9;
             padding: 15px;
             box-shadow: 0 2px 4px rgba(76, 175, 80, 0.1);
         }
@@ -903,6 +903,34 @@
             opacity: 0.3;
             color: #4CAF50;
         }
+        
+        .mini-shinchan {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            background-color: #e8f5e9;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(76, 175, 80, 0.1);
+        }
+        
+        .mini-shinchan-image {
+            height: 200px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+            filter: brightness(1.05);
+        }
+        
+        .mini-shinchan-image:hover {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
+        
+        /* 暗色主题适配 */
+        .theme-dark .mini-shinchan-image {
+            filter: brightness(1.2);
+        }
     </style>
 </head>
 <body>
@@ -915,6 +943,9 @@
         <div class="crayon-decoration shinchan-right"></div>
         <div class="crayon-border"></div>
         <div class="shinchan-header">✏️ 蜡笔小新陪你看视频 ✏️</div>
+        <div class="mini-shinchan">
+            <img src="images/xiao.png" alt="蜡笔小新" class="mini-shinchan-image">
+        </div>
         <h1>🎬 小徐视频解析工具</h1>
         <div class="input-group">
             <input type="text" id="videoUrl" placeholder="请输入视频链接（支持腾讯、爱奇艺、芒果、优酷）">
