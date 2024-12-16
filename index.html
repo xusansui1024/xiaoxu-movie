@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>视频解析工具</title>
+    <style>
+        body {
+            background-color: #f0f7f4;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            color: #2c4a3c;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        h1 {
+            color: #2c4a3c;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        .input-group {
+            margin-bottom: 25px;
+            background-color: #f8faf9;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #d0e6d9;
+        }
+        #videoUrl {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 2px solid #a8d5bb;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+        #videoUrl:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+        #parseButton {
+            width: 100%;
+            padding: 12px 24px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+        #parseButton:hover {
+            background-color: #45a049;
+        }
+        #parseButton:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        #videoPlayer {
+            width: 100%;
+            height: 500px;
+            border: none;
+            border-radius: 8px;
+            background-color: #f8faf9;
+            margin-top: 20px;
+        }
+        .loading {
+            display: none;
+            margin: 15px 0;
+            color: #2c4a3c;
+            text-align: center;
+            padding: 10px;
+            background-color: #e8f5e9;
+            border-radius: 6px;
+        }
+        .message {
+            display: none;
+            margin: 15px 0;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        .message.error {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #ffcdd2;
+        }
+        .message.success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
+        }
+        #apiStatus {
+            font-size: 14px;
+            color: #557b6c;
+            margin-top: 10px;
+            text-align: center;
+        }
+        .tip {
+            color: #557b6c;
+            margin-top: 10px;
+            font-size: 14px;
+            text-align: center;
+        }
+        small {
+            color: #557b6c;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #d0e6d9;
+            color: #557b6c;
+            font-size: 14px;
+        }
+        .crayon-decoration {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            pointer-events: none;
+        }
+        
+        .shinchan-left {
+            left: -140px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-image: url('https://api.iconify.design/emojione-monotone:crayon.svg?color=%234CAF50');
+            animation: float-left 3s ease-in-out infinite;
+        }
+        
+        .shinchan-right {
+            right: -140px;
+            top: 50%;
+            transform: translateY(-50%) scaleX(-1);
+            background-image: url('https://api.iconify.design/emojione-monotone:crayon.svg?color=%234CAF50');
+            animation: float-right 3s ease-in-out infinite;
+        }
+        
+        .shinchan-header {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            color: #4CAF50;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            background-color: #ffffff;
+            padding: 5px 15px;
+            border-radius: 20px;
+            z-index: 1;
+        }
+        
+        @keyframes float-left {
+            0%, 100% { transform: translateY(-50%) rotate(-5deg); }
+            50% { transform: translateY(-60%) rotate(5deg); }
+        }
+        
+        @keyframes float-right {
+            0%, 100% { transform: translateY(-50%) scaleX(-1) rotate(5deg); }
+            50% { transform: translateY(-60%) scaleX(-1) rotate(-5deg); }
+        }
+        
+        .crayon-border {
+            border: 3px solid #a8d5bb;
+            border-style: dashed;
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border-radius: 15px;
+            pointer-events: none;
+        }
+        
+        .shinchan-footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 24px;
+            color: #4CAF50;
+        }
+        
+        .footer {
+            position: relative;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
+        .footer::before,
+        .footer::after {
+            content: "✏️";
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+        }
+        
+        .footer::before {
+            left: 20%;
+        }
+        
+        .footer::after {
+            right: 20%;
+        }
+        
+        .shinchan-image-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(76, 175, 80, 0.1);
+        }
+
+        .shinchan-image {
+            height: 200px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .shinchan-image:hover {
+            transform: scale(1.05);
+        }
+
+        .image-decoration {
+            position: absolute;
+            font-size: 24px;
+            color: #4CAF50;
+            opacity: 0.2;
+        }
+
+        .decoration-left {
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .decoration-right {
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px 10px;
+                padding: 20px 15px;
+            }
+            
+            h1 {
+                font-size: 22px;
+            }
+            
+            .shinchan-header {
+                font-size: 18px;
+                top: -30px;
+            }
+            
+            /* 在移动端隐藏装饰性元素 */
+            .crayon-decoration {
+                display: none;
+            }
+            
+            #videoPlayer {
+                height: 240px;  /* 移动端降低播放器高度 */
+            }
+            
+            .shinchan-image {
+                height: 150px;  /* 移动端降低图片高度 */
+            }
+            
+            .footer::before,
+            .footer::after {
+                display: none;  /* 隐藏页脚装饰 */
+            }
+            
+            #parseButton {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+            
+            #videoUrl {
+                padding: 8px;
+                font-size: 14px;
+            }
+            
+            .tip {
+                font-size: 12px;
+            }
+        }
+        
+        /* 针对超小屏幕的优化 */
+        @media (max-width: 320px) {
+            .container {
+                margin: 10px 5px;
+                padding: 15px 10px;
+            }
+            
+            h1 {
+                font-size: 20px;
+            }
+            
+            .shinchan-header {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="crayon-decoration shinchan-left"></div>
+        <div class="crayon-decoration shinchan-right"></div>
+        <div class="crayon-border"></div>
+        <div class="shinchan-header">✏️ 蜡笔小新陪你看视频 ✏️</div>
+        <h1>🎬 蜡笔小新视频解析工具</h1>
+        <div class="input-group">
+            <input type="text" id="videoUrl" placeholder="请输入视频链接（支持腾讯、爱奇艺、芒果、优酷）">
+            <button id="parseButton">解析播放</button>
+            <div id="apiStatus"></div>
+            <div class="tip">
+                提示：如果当前线路无法播放，系统会自动切换到其他线路
+            </div>
+        </div>
+        <div class="shinchan-image-container">
+            <span class="image-decoration decoration-left">✏️</span>
+            <img src="./images/shinchan.png" alt="蜡笔小新" class="shinchan-image">
+            <span class="image-decoration decoration-right">✏️</span>
+        </div>
+        <div id="loading" class="loading">
+            正在解析中，请稍候...
+            <br>
+            <small>如果长时间无响应，将自动切换其他线路</small>
+        </div>
+        <div id="message" class="message"></div>
+        <iframe id="videoPlayer" allowfullscreen allow="autoplay; fullscreen"></iframe>
+        <div class="shinchan-footer">
+            (〃'▽'〃)
+        </div>
+        <div class="footer">
+            支持主流视频网站的视频解析 | 使用更快更稳定的解析接口
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html> 
